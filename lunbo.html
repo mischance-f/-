@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		
+		body{
+			background-color: #ccc;
+		}
+		.wrapper{
+			width: 720px;
+			height: 412px;
+			margin: 100px auto;
+			overflow: hidden;
+			position: relative;
+		}
+		.wrapper .box{
+			width: 400%;
+			position: absolute;
+			left: 0;
+			top: 0;
+			transition: left 1s;
+		}
+		.box ul li{
+			float: left;
+		}	
+		.box img{
+			width: 720px;
+			height: 410px;
+			float: left;
+		}
+		.right{
+			width: 0;
+			height: 0;
+			position: absolute;
+			z-index: 99;
+			right: -17px;
+			top: 185px;
+			border: 30px solid grey;
+			border-right-color:transparent;
+			border-top-color: transparent;
+			border-bottom-color: transparent;
+		}
+		.wrapper .right:hover {
+			border: 30px solid red;
+			border-right-color:transparent;
+			border-top-color: transparent;
+			border-bottom-color: transparent;
+			cursor: pointer;
+		}
+		.left{
+			width: 0;
+			height: 0;
+			position: absolute;
+			z-index: 99;
+			left: -17px;
+			top: 185px;
+			border: 30px solid grey;
+			border-left-color:transparent;
+			border-top-color: transparent;
+			border-bottom-color: transparent;
+		}
+		.wrapper .left:hover {
+			border: 30px solid red;
+			border-left-color:transparent;
+			border-top-color: transparent;
+			border-bottom-color: transparent;
+			cursor: pointer;
+		}
+		.wrapper .dot{
+			width: 400px;
+			height: 30px;
+			position: absolute;
+			top: 330px;
+			left: 295px;
+			line-height: 30px;
+		}
+		.wrapper .dot li{
+			float: left;
+			width: 15px;
+			height: 15px;
+			background-color:rgba(200,200,200,0.4);
+			border: 2px solid #FF0000;
+			border-radius: 50%;
+			margin-right: 20px;
+			margin-top: 20px;
+		}
+		.wrapper .dot li:hover{
+			background-color:rgba(200,200,200,1);
+		}
+		.wrapper .dot .act{
+			background-color:rgba(200,200,200,0.8);
+		}
+	</style>
+	<body>
+		<div class="wrapper">
+			<div class="pic">
+				<ul class="box">
+					<li class="img"><img src="img/1.jpg" alt=""/> </li>
+					<li class="img"><img src="img/2.jpg" alt=""/> </li>
+					<li class="img"><img src="img/3.jpg" alt=""/> </li>
+					<li class="img"><img src="img/4.jpg" alt=""/> </li>
+				</ul>
+			</div>
+			<div class="left"></div>
+			<div class="right"></div>
+			<div class="dot">
+				<ul >
+					<li class="act"><a href="#"></a> </li>
+					<li ><a href="#"></a> </li>
+					<li ><a href="#"></a> </li>
+					<li ><a href="#"></a> </li>
+					
+				</ul>
+			</div>
+		</div>
+	</body>
+	<script>
+	var timer = null,
+		timerInv = null,
+		window_width = 720,
+		index = 0,
+		flag = true,
+		step = 0,
+		img_count = 4,
+		newLeft = 0,
+		locatArr = [0, -720, -1440, -2160];
+	var box = document.getElementsByClassName('box')[0],
+		dot = document.getElementsByClassName('dot')[0];
+	
+		
+	function disPlay () {
+		var initLeft = parseInt(window.getComputedStyle(box).left);
+		if(index == img_count - 1){
+			moveTo(0);
+			index = 0;
+		}else{
+			moveTo(++index);
+		}	
+	}
+	function leftPlay(){
+		if(index==0){
+			moveTo(index==3)
+			index=3;
+		}else{
+			moveTo(index--)
+		}
+	}
+	function rightPlay(){
+		if(index==3){
+			moveTo(index==0)
+			index=0;
+		}else{
+			moveTo(index++)
+		}
+	}
+	
+	function bindEvent(){
+		var li = dot.getElementsByTagName('li');
+		var right = document.getElementsByClassName('right')[0];
+		var left = document.getElementsByClassName('left')[0];
+		right.addEventListener('click',function(){
+			clearInterval(timer);
+			rightPlay();
+			timer=setInterval(disPlay,2000);
+		})
+		left.addEventListener('click',function(){
+			clearInterval(timer);
+			leftPlay();
+			timer=setInterval(disPlay,2000);
+		})
+		for(var i = 0; i < 4; i++){
+			(function (j) {
+				li[j].addEventListener('click',function () {
+					clearInterval(timer);
+					index = j;
+					moveTo(index);
+					timer = setInterval(disPlay,2000);
+				})
+			}(i))
+		}
+	}	
+
+function moveTo(location) {
+	var target_position = parseInt(window.getComputedStyle(box).left) - locatArr[location];
+	box.style.left = locatArr[location] + 'px';
+}
+function start() {
+
+	timer = setInterval(disPlay,2000);
+	var timerDot = setInterval(function () {
+		var dots = document.getElementsByClassName('dot')[0];
+		var singledot = dots.getElementsByTagName('li');
+		for(var i = 0; i < 4; i++){
+			singledot[i].className = '';
+		}
+		singledot[index].className = 'act';
+	},20)
+	bindEvent();
+}
+start();
+	</script>
+</html>
